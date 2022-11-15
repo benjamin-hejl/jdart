@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM adoptopenjdk/openjdk8
 MAINTAINER Kasper Luckow <kasper.luckow@sv.cmu.edu>
 
 #############################################################################
@@ -7,27 +7,25 @@ MAINTAINER Kasper Luckow <kasper.luckow@sv.cmu.edu>
 RUN \
   apt-get update -y && \
   apt-get install software-properties-common -y && \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository ppa:webupd8team/java -y && \
   apt-get update -y && \
-  apt-get install -y oracle-java8-installer \
-                ant \
+  apt-get install -y ant \
                 maven \
                 git \
                 junit \
                 build-essential \
                 python \
                 antlr3 \
+                wget \
+                unzip \
                 && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+  rm -rf /var/lib/apt/lists/* 
 
 #############################################################################
 # Environment 
 #############################################################################
 
 # set java env
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+#ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV JUNIT_HOME /usr/share/java
 
 RUN mkdir /jdart-project
@@ -87,6 +85,7 @@ RUN cp /root/.m2/repository/com/microsoft/z3/4.4.1/z3-4.4.1.jar /root/.jconstrai
 #############################################################################
 
 WORKDIR ${JDART_DIR}
-RUN git clone https://github.com/psycopaths/jdart.git 
+# RUN git clone https://github.com/psycopaths/jdart.git 
+RUN git clone https://github.com/benjamin-hejl/jdart.git 
 WORKDIR ${JDART_DIR}/jdart
 RUN ant
